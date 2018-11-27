@@ -1,0 +1,28 @@
+Dockerfile:
+
+FROM ubuntu:16.04
+EXPOSE 8000
+
+RUN apt-get update 
+RUN apt-get install -y curl
+RUN apt-get install -y sudo
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+RUN sudo apt install -y nodejs
+
+WORKDIR /dir
+COPY . .
+RUN npm install
+RUN touch logs.txt
+CMD ["npm", "start"]
+
+**
+
+Created the file logs.txt also on the host.
+
+Build:
+
+$ docker build -t aa .
+
+Run:
+
+$ docker run -d -v $(realpath logs.txt):/dir/logs.txt --name bb -p 8000:8000 aa

@@ -1,0 +1,8 @@
+For this exercise I removed the "CMD ["npm","start"]" line from both Dockerfiles and ran the containers followingly:
+
+Frontend:
+$ docker run -d --name front-c -p 5000:5000 front sh -c 'API_URL=http://localhost:8000 npm start'
+
+Backend:
+docker run -d --name back-c -p 8000:8000 back sh -c 'FRONT_URL=http://localhost:5000 npm start'
+

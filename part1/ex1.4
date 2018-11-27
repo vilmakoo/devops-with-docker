@@ -1,0 +1,22 @@
+FROM ubuntu:16.04
+EXPOSE 5000
+RUN apt-get update 
+RUN apt-get install -y curl
+RUN apt-get install -y sudo
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+RUN sudo apt install -y nodejs
+
+WORKDIR /api
+COPY / .
+RUN npm install
+CMD ["npm","start"]
+
+**
+
+Build:
+
+$ docker build -t aa .
+
+Run:
+
+$ docker run -d --name bb -p 5000:5000 aa
