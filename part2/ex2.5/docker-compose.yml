@@ -1,0 +1,45 @@
+# does not work atm
+
+version: '3.5'
+ 
+services:
+ 
+    db:
+      image: postgres:latest
+      restart: always
+      container_name: db
+ 
+    backend:
+      build: .
+      ports:
+        - '8000:8000'
+      environment:
+        - FRONT_URL=http://localhost:5000
+        - REDIS=redis
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=jea
+        - DB_NAME=postgres
+        - DB_HOST=db
+      links:
+        - redis
+        - db
+      container_name: backend
+ 
+    frontend:
+      build: ../frontend-example-docker/
+      ports:
+        - '5000:5000'
+      environment:
+        - API_URL=http://localhost:8000
+      container_name: frontend
+ 
+    redis:
+      image: redis:latest
+      container_name: redis
+ 
+    proxy:
+      image: nginx
+      volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      ports:
+        - '80:80'
