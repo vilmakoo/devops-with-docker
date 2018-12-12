@@ -1,20 +1,27 @@
-# not sure if this actually works
-
 version: '3.5'
 
 services:
     frontend:
       build: ./ml-kurkkumopo-frontend
+      ports:
+        - 3000:3000
+      restart: unless-stopped 
 
     backend:
       build: ./ml-kurkkumopo-backend
+      ports:
+        - 5000:5000
       volumes:
-        - /src/models:/ml-kurkkumopo-training/model
+        - model:/src/model
+      restart: unless-stopped 
 
     training:
       build: ./ml-kurkkumopo-training
       volumes:
-        - /src/imgs:/src/imgs/
-        - /data:/data/
-        - /model:/model/
-      
+        - imgs:/src/imgs/
+        - ./ml-kurkkumopo-training/data:/src/data/
+        - model:/src/model/
+
+volumes:
+    imgs:
+    model:
