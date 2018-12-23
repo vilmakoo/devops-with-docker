@@ -1,0 +1,52 @@
+BACKEND
+
+- Size of the image first: 333 MB
+
+- Dockerfile after changes:
+
+FROM ubuntu:16.04
+EXPOSE 8000
+
+RUN apt-get update && \
+  apt-get install -y curl && \
+  apt-get install -y sudo && \
+  curl -sL https://deb.nodesource.com/setup_10.x | bash && \
+  sudo apt install -y nodejs && \
+  apt-get purge -y --auto-remove curl && \ 
+  rm -rf /var/lib/apt/lists/*  && \
+  npm install && \
+  touch logs.txt
+
+WORKDIR /app
+COPY . .
+
+CMD ["npm", "start"]
+
+- Size after the changes: 306 MB
+
+
+FRONTEND
+
+- Size of the image first: 437 MB
+
+- Dockerfile after changes:
+
+FROM ubuntu:16.04
+EXPOSE 5000
+
+WORKDIR /api
+COPY / .
+
+RUN apt-get update && \
+  apt-get install -y curl && \
+  curl -sL https://deb.nodesource.com/setup_10.x | bash && \
+  apt install -y nodejs && \
+  apt-get purge -y --auto-remove curl && \ 
+  rm -rf /var/lib/apt/lists/* && \
+  npm install && \
+  npm run build && \
+  npm install -g serve
+
+CMD ["serve", "-s", "-l", "5000", "dist"]
+
+- Size after the changes: 405 MB

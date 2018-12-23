@@ -1,0 +1,45 @@
+BACKEND
+
+- Size of the image first: 306 MB
+
+- Dockerfile after changes:
+
+FROM node:10
+EXPOSE 8000
+
+WORKDIR /app
+COPY . .
+
+RUN npm install && \
+  touch logs.txt && \
+  chown -R node .
+
+USER node 
+
+CMD ["npm", "start"]
+
+- Size after the changes: 90 MB
+
+
+FRONTEND
+
+- Size of the image first: 405 MB
+
+- Dockerfile after changes:
+
+FROM node:alpine
+EXPOSE 5000
+
+WORKDIR /app
+COPY / .
+
+RUN npm install && \
+  npm run build && \
+  npm install -g serve && \
+  chown -R node .
+
+USER node 
+
+CMD ["serve", "-s", "-l", "5000", "dist"]
+
+- Size after the changes: 332 MB

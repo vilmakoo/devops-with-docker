@@ -1,0 +1,22 @@
+I chose to optimize the Dockerfile of the ml-kurkkumopo frontend.
+
+- The size of the image at first: 948 MB
+
+- Dockerfile after changes:
+
+FROM node:alpine
+EXPOSE 3000
+
+WORKDIR /app
+COPY . /app
+
+RUN npm i && \
+  npm run build && \
+  npm install -g serve && \
+  chown -R node .
+
+USER node 
+
+CMD ["serve", "-s", "-l", "3000", "build"]
+
+- Size after changes: 343 MB
